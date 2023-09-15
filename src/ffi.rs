@@ -28,6 +28,9 @@ extern "C" {
     fn get_global_error() -> *const c_char;
 }
 
+/// Returns the error string.
+///
+/// Equivalent to `MeCab::getLastError()`.
 pub fn global_error<'a>() -> &'a [u8] {
     unsafe {
         let e = get_global_error();
@@ -36,6 +39,7 @@ pub fn global_error<'a>() -> &'a [u8] {
     }
 }
 
-pub fn error_str<'a>() -> Result<&'a str, Utf8Error> {
+/// Converts [`global_error()`] as a [`&str`].
+pub fn global_error_str<'a>() -> Result<&'a str, Utf8Error> {
     std::str::from_utf8(global_error())
 }

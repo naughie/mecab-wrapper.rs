@@ -3,6 +3,7 @@ use libc::{c_char, c_int, c_uint, c_ushort};
 use std::ffi::CStr;
 use std::fmt;
 
+/// Dictionary type. This is a return value of [`DictionaryInfo::dictionary_type()`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum DictionaryType {
     /// System dictionary
@@ -13,14 +14,21 @@ pub enum DictionaryType {
     UnknownWord,
 }
 
+/// Dictionary structure information.
+///
+/// It has the same layout as `MeCab::DictionaryInfo`.
 #[repr(C)]
 pub struct DictionaryInfo {
     filename: *const c_char,
     charset: *const c_char,
+    /// How many words are registered in this dictionary.
     pub size: c_uint,
     r#type: c_int,
+    /// Size of left attributes.
     pub lsize: c_uint,
+    /// Size of right attributes.
     pub rsize: c_uint,
+    /// Version of this dictionary.
     pub version: c_ushort,
 }
 
@@ -28,12 +36,15 @@ unsafe impl Send for DictionaryInfo {}
 unsafe impl Sync for DictionaryInfo {}
 
 impl DictionaryInfo {
+    /// Filename of dictionary. On Windows, filename is stored in UTF-8 encoding.
     pub fn filename(&self) -> &[u8] {
         unsafe {
             let s = CStr::from_ptr(self.filename);
             s.to_bytes()
         }
     }
+
+    /// Character set of the dictionary. E.g., `"SHIFT-JIS"`, `"UTF-8"`.
     pub fn charset(&self) -> &[u8] {
         unsafe {
             let s = CStr::from_ptr(self.charset);
@@ -41,6 +52,7 @@ impl DictionaryInfo {
         }
     }
 
+    /// Dictionary type.
     pub fn dictionary_type(&self) -> DictionaryType {
         match self.r#type {
             0 => DictionaryType::System,
