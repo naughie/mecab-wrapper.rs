@@ -32,6 +32,8 @@ extern "C" {
     ) -> VoidPtr;
 }
 
+/// Wrapper of the
+/// [`MeCab::Model`](https://taku910.github.io/mecab/doxygen/classMeCab_1_1Model.html) class.
 pub struct Model {
     void_model: NonNull<c_void>,
 }
@@ -40,6 +42,13 @@ unsafe impl Send for Model {}
 unsafe impl Sync for Model {}
 
 impl Model {
+    /// Factory method to create a new Model with a string parameter representation, i.e.,
+    /// `"-d /user/local/mecab/dic/ipadic -Ochasen"`.
+    /// Equivalent to `MeCab::Model::create(const char *arg)`.
+    ///
+    /// Returns `None` if the new model cannot be initialized. Use
+    /// [`global_error()`](crate::global_error())
+    /// ([`global_error_str()`](crate::global_error_str())) to obtain the cause of the errors.
     pub fn new(arg: &str) -> Option<Self> {
         let mut v = Vec::with_capacity(arg.len() + 1);
         v.extend_from_slice(arg.as_bytes());
@@ -53,6 +62,7 @@ impl Model {
         }
     }
 
+    /// Dictionary information.
     pub fn dictionary_info(&self) -> &DictionaryInfo {
         unsafe {
             let info = dictionary_info(self.void_model.as_ptr());
@@ -60,6 +70,7 @@ impl Model {
         }
     }
 
+    /// Returns a version string.
     pub fn version(&self) -> &[u8] {
         unsafe {
             let ver = model_version(self.void_model.as_ptr());
@@ -68,18 +79,34 @@ impl Model {
         }
     }
 
+    /// Converts [`Model::version()`] as a [`&str`].
     pub fn version_str(&self) -> Result<&str, Utf8Error> {
         std::str::from_utf8(self.version())
     }
 
+    /// Returns the transition cost from `rattr` to `lattr`.
     pub fn transition_cost(&self, rattr: Attribute, lattr: Attribute) -> c_int {
         unsafe { transition_cost(self.void_model.as_ptr(), rattr.0, lattr.0) }
     }
 
+    /// Swaps the instance with `new_model`.
+    ///
+    /// Returns true if the model is swapped successfully.
+    ///
+    /// This method is thread safe. All taggers created by [`Model::create_tagger()`] will also be
+    /// updated asynchronously. No need to stop the parsing thread explicitly before swapping model
+    /// objects.
     pub fn swap(&mut self, new_model: Self) -> bool {
         unsafe { swap_model(self.void_model.as_ptr(), new_model.void_model.as_ptr()) }
     }
 
+    /// Creates a new tagger object. Equivalent to `MeCab::Model::createTagger()`.
+    ///
+    /// Returns `None` if the new tagger cannot be initialized. Use
+    /// [`global_error()`](crate::global_error())
+    /// ([`global_error_str()`](crate::global_error_str())) to obtain the cause of the errors.
+    ///
+    /// All of the returned tagger share this model as a parsing model.
     pub fn create_tagger(&self) -> Option<Tagger<'_>> {
         unsafe {
             let tagger = new_tagger(self.void_model.as_ptr());
@@ -87,6 +114,7 @@ impl Model {
         }
     }
 
+    /// Creates a new lattice object. Equivalent to `MeCab::Model::createLattice()`.
     pub fn create_lattice(&self) -> Lattice<'_> {
         unsafe {
             let lattice = new_lattice(self.void_model.as_ptr());
@@ -94,6 +122,12 @@ impl Model {
         }
     }
 
+    /// Performs common prefix search. Equivalent to
+    /// ```cpp
+    /// const char *begin = prefix.as_ptr();
+    /// const char *end = begin + prefix.len();
+    /// MeCab::Model::lookup(begin, end, lattice)
+    /// ```
     pub fn prefix_search<'a, 'b>(
         &'a self,
         prefix: &str,
