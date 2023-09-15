@@ -14,9 +14,7 @@ pub enum DictionaryType {
     UnknownWord,
 }
 
-/// Dictionary structure information.
-///
-/// It has the same layout as
+/// Dictionary structure information. It has the same layout as
 /// [`MeCab::DictionaryInfo`](https://taku910.github.io/mecab/doxygen/structmecab__dictionary__info__t.html).
 #[repr(C)]
 pub struct DictionaryInfo {
