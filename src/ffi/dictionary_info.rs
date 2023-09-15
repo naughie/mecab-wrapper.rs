@@ -16,7 +16,8 @@ pub enum DictionaryType {
 
 /// Dictionary structure information.
 ///
-/// It has the same layout as `MeCab::DictionaryInfo`.
+/// It has the same layout as
+/// [`MeCab::DictionaryInfo`](https://taku910.github.io/mecab/doxygen/structmecab__dictionary__info__t.html).
 #[repr(C)]
 pub struct DictionaryInfo {
     filename: *const c_char,
@@ -30,6 +31,7 @@ pub struct DictionaryInfo {
     pub rsize: c_uint,
     /// Version of this dictionary.
     pub version: c_ushort,
+    next: *mut DictionaryInfo,
 }
 
 unsafe impl Send for DictionaryInfo {}
@@ -59,6 +61,13 @@ impl DictionaryInfo {
             1 => DictionaryType::User,
             _ => DictionaryType::UnknownWord,
         }
+    }
+
+    /// Pointer to the next dictionary info.
+    ///
+    /// It returns `None` if the pointer is null.
+    pub fn next(&self) -> Option<&Self> {
+        unsafe { self.next.as_ref() }
     }
 }
 
