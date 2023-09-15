@@ -10,13 +10,15 @@ pub use tagger::Tagger;
 
 mod lattice;
 pub use lattice::Lattice;
-pub use lattice::RequestType;
 
 mod node;
 pub use node::Attribute;
 pub use node::Node;
 pub use node::NodeStatus;
 pub use node::Path;
+
+mod request_type;
+pub use request_type::RequestType;
 
 use libc::c_char;
 
