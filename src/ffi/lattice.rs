@@ -150,7 +150,7 @@ impl Drop for Lattice<'_> {
 pub use rt::RequestType;
 
 mod rt {
-    use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign};
+    use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Not};
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct RequestType(u8);
@@ -219,6 +219,15 @@ mod rt {
         #[inline]
         fn bitxor_assign(&mut self, rhs: Self) {
             self.0 ^= rhs.0;
+        }
+    }
+
+    impl Not for RequestType {
+        type Output = Self;
+
+        #[inline]
+        fn not(self) -> Self::Output {
+            Self(127 ^ self.0)
         }
     }
 }
