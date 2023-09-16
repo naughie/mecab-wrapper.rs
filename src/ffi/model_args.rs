@@ -272,6 +272,10 @@ impl<const N: usize> ModelArgs for &[Cow<'_, CStr>; N] {
     }
 }
 
+/// Represents keys of options for `MeCab::createModel()`. It can be used as an argument to
+/// [`Model::new()`](crate::Model::new()) (see [`ModelArgs`]).
+///
+/// Some options such as `help` are omitted because they have no effects for `lib` usage of MeCab.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum OptionKey {
     /// Path of a resource file.
