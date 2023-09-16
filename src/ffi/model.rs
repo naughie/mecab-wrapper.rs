@@ -1,4 +1,4 @@
-use super::{Attribute, DictionaryInfo, Lattice, Node, Tagger};
+use super::{Attribute, DictionaryInfo, Lattice, ModelArgs, Node, Tagger};
 
 use libc::{c_char, c_int, c_ushort};
 
@@ -11,7 +11,6 @@ use std::str::Utf8Error;
 
 #[link(name = "cmecab")]
 extern "C" {
-    fn new_model(arg: *const c_char) -> VoidPtr;
     fn delete_model(model: VoidPtr);
 
     fn dictionary_info(model: VoidPtr) -> VoidPtr;
@@ -42,24 +41,18 @@ unsafe impl Send for Model {}
 unsafe impl Sync for Model {}
 
 impl Model {
-    /// Factory method to create a new Model with a string parameter representation, i.e.,
-    /// `"-d /user/local/mecab/dic/ipadic -Ochasen"`.
-    /// Equivalent to `MeCab::Model::create(const char *arg)`.
+    /// Factory method to create a new Model.
+    /// Equivalent to `MeCab::createModel()`.
     ///
     /// Returns `None` if the new model cannot be initialized. Use
     /// [`global_error()`](crate::global_error())
     /// ([`global_error_str()`](crate::global_error_str())) to obtain the cause of the errors.
-    pub fn new(arg: &str) -> Option<Self> {
-        let mut v = Vec::with_capacity(arg.len() + 1);
-        v.extend_from_slice(arg.as_bytes());
-        v.push(b'\0');
-        let arg = CStr::from_bytes_with_nul(&v).unwrap_or_default();
-
-        unsafe {
-            let void_model = new_model(arg.as_ptr());
-            let void_model = NonNull::new(void_model)?;
-            Some(Self { void_model })
-        }
+    ///
+    /// See [`ModelArgs`] for details and examples.
+    pub fn new<Arg: ModelArgs>(arg: Arg) -> Option<Self> {
+        let void_model = arg.create_model();
+        let void_model = NonNull::new(void_model)?;
+        Some(Self { void_model })
     }
 
     /// Dictionary information.

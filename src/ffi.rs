@@ -2,6 +2,10 @@ mod dictionary_info;
 pub use dictionary_info::DictionaryInfo;
 pub use dictionary_info::DictionaryType;
 
+mod model_args;
+pub use model_args::ModelArgs;
+pub use model_args::OptionKey;
+
 mod model;
 pub use model::Model;
 

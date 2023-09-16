@@ -6,7 +6,13 @@ extern "C" const char *get_global_error() {
     return getLastError();
 }
 
-extern "C" void *new_model(const char *arg) {
+extern "C" void *new_model_argv(int argc, char **argv) {
+    Model *model = createModel(argc, argv);
+    void *void_model = (void *)model;
+    return void_model;
+}
+
+extern "C" void *new_model_single(const char *arg) {
     Model *model = createModel(arg);
     void *void_model = (void *)model;
     return void_model;
