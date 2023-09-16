@@ -339,7 +339,7 @@ fn twice(first: OptionKey, second: &CStr) -> impl Iterator<Item = &CStr> {
 
 impl ModelArgs for &[(OptionKey, &CStr)] {
     fn create_model(self) -> VoidPtr {
-        let it = once(SYSTEM_NAME).chain(self.iter().map(|&(key, val)| twice(key, val)).flatten());
+        let it = once(SYSTEM_NAME).chain(self.iter().flat_map(|&(key, val)| twice(key, val)));
         IterInnerImpl(it).create_model()
     }
 }
@@ -351,8 +351,7 @@ impl<const N: usize> ModelArgs for &[(OptionKey, &CStr); N] {
 
 impl ModelArgs for &[(OptionKey, &CString)] {
     fn create_model(self) -> VoidPtr {
-        let it =
-            once(SYSTEM_NAME).chain(self.iter().map(|&(key, ref val)| twice(key, val)).flatten());
+        let it = once(SYSTEM_NAME).chain(self.iter().flat_map(|&(key, val)| twice(key, val)));
         IterInnerImpl(it).create_model()
     }
 }
@@ -364,8 +363,7 @@ impl<const N: usize> ModelArgs for &[(OptionKey, &CString); N] {
 
 impl ModelArgs for &[(OptionKey, CString)] {
     fn create_model(self) -> VoidPtr {
-        let it =
-            once(SYSTEM_NAME).chain(self.iter().map(|&(key, ref val)| twice(key, val)).flatten());
+        let it = once(SYSTEM_NAME).chain(self.iter().flat_map(|&(key, ref val)| twice(key, val)));
         IterInnerImpl(it).create_model()
     }
 }
@@ -377,8 +375,7 @@ impl<const N: usize> ModelArgs for &[(OptionKey, CString); N] {
 
 impl ModelArgs for &[(OptionKey, Cow<'_, CStr>)] {
     fn create_model(self) -> VoidPtr {
-        let it =
-            once(SYSTEM_NAME).chain(self.iter().map(|&(key, ref val)| twice(key, val)).flatten());
+        let it = once(SYSTEM_NAME).chain(self.iter().flat_map(|&(key, ref val)| twice(key, val)));
         IterInnerImpl(it).create_model()
     }
 }
