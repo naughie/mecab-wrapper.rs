@@ -66,6 +66,11 @@ impl<'a> Lattice<'a> {
     pub fn to_str(&self) -> Result<&str, Utf8Error> {
         std::str::from_utf8(self.to_bytes())
     }
+    /// # Safety
+    /// See [`std::str::from_utf8_unchecked()`].
+    pub unsafe fn to_str_unchecked(&self) -> &str {
+        std::str::from_utf8_unchecked(self.to_bytes())
+    }
 
     pub fn bos_node(&self) -> Option<&Node> {
         unsafe {

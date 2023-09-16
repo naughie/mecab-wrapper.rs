@@ -187,6 +187,13 @@ impl Node {
     pub fn surface_str(&self) -> Result<&str, Utf8Error> {
         std::str::from_utf8(self.surface())
     }
+    /// Converts [`Node::surface()`] as a [`&str`].
+    ///
+    /// # Safety
+    /// See [`std::str::from_utf8_unchecked()`].
+    pub unsafe fn surface_str_unchecked(&self) -> &str {
+        std::str::from_utf8_unchecked(self.surface())
+    }
 
     /// Feature string. Equivalent to `MeCab::Node::feature` (without terminating `'\0'`).
     pub fn features(&self) -> &[u8] {
@@ -198,6 +205,13 @@ impl Node {
     /// Converts [`Node::features()`] as a [`&str`].
     pub fn features_str(&self) -> Result<&str, Utf8Error> {
         std::str::from_utf8(self.features())
+    }
+    /// Converts [`Node::features()`] as a [`&str`].
+    ///
+    /// # Safety
+    /// See [`std::str::from_utf8_unchecked()`].
+    pub unsafe fn features_str_unchecked(&self) -> &str {
+        std::str::from_utf8_unchecked(self.features())
     }
     /// Returns an iterator of [`Node::features()`].
     pub fn feature_reader(&self) -> FeatureReader<'_> {
