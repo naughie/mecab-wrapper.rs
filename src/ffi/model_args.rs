@@ -30,6 +30,9 @@ extern "C" {
 ///
 /// They just take pointers [`CStr::as_ptr()`] and call `createModel(const char *arg)`.
 ///
+/// `impl ModelArgs` for `CString` or `Cow::Owned` is intended to [`drop()`](std::ops::Drop) it as
+/// soon as a model is created.
+///
 /// ## `u8`-array (`&[u8]`, `Vec<u8>`, `&str`, `String`, etc.)
 ///
 /// If they end with a NULL character (`'\0'`), they are converted by
@@ -37,6 +40,9 @@ extern "C" {
 /// In such a case, we do not need new heap allocation.
 ///
 /// Otherwise, we need to append a NULL character, so `&[u8]`/`&str` require heap allocation.
+///
+/// `impl ModelArgs` for `Vec<u8>` or `String` is intended to [`drop()`](std::ops::Drop) it as
+/// soon as a model is created.
 ///
 /// ## Arary of `&CStr`/`&CString`/`CString`/`Cow<CStr>`
 ///
