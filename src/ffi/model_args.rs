@@ -312,19 +312,19 @@ impl OptionKey {
         use self::OptionKey::*;
 
         match self {
-            Rcfile => b"rcfile\0",
-            Dicdir => b"dicdir\0",
-            Userdic => b"userdic\0",
-            OutputFormatType => b"output-format-type\0",
-            MaxGroupingSize => b"max-grouping-size\0",
-            NodeFormat => b"node-format\0",
-            UnkFormat => b"unk-format\0",
-            BosFormat => b"bos-format\0",
-            EosFormat => b"eos-format\0",
-            EonFormat => b"eon-format\0",
-            UnkFeature => b"unk-feature\0",
-            InputBufferSize => b"input-buffer-size\0",
-            CostFactor => b"cost-factor\0",
+            Rcfile => b"-r\0",
+            Dicdir => b"-d\0",
+            Userdic => b"-u\0",
+            OutputFormatType => b"-O\0",
+            MaxGroupingSize => b"-M\0",
+            NodeFormat => b"-F\0",
+            UnkFormat => b"-U\0",
+            BosFormat => b"-B\0",
+            EosFormat => b"-E\0",
+            EonFormat => b"-S\0",
+            UnkFeature => b"-x\0",
+            InputBufferSize => b"-b\0",
+            CostFactor => b"-c\0",
         }
     }
 
