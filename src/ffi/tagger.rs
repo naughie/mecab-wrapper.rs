@@ -16,7 +16,7 @@ extern "C" {
     fn parse(tagger: VoidPtr, lattice: VoidPtr) -> bool;
 
     fn tagger_what(tagger: VoidPtr) -> *const c_char;
-    fn tagger_version(tagger: VoidPtr) -> *const c_char;
+    fn tagger_version() -> *const c_char;
 }
 
 pub struct Tagger<'a> {
@@ -49,16 +49,16 @@ impl<'a> Tagger<'a> {
         std::str::from_utf8(self.error())
     }
 
-    pub fn version(&self) -> &[u8] {
+    pub fn version<'v>() -> &'v [u8] {
         unsafe {
-            let ver = tagger_version(self.void_tagger.as_ptr());
+            let ver = tagger_version();
             let s = CStr::from_ptr(ver);
             s.to_bytes()
         }
     }
 
-    pub fn version_str(&self) -> Result<&str, Utf8Error> {
-        std::str::from_utf8(self.version())
+    pub fn version_str<'v>() -> Result<&'v str, Utf8Error> {
+        std::str::from_utf8(Self::version())
     }
 }
 

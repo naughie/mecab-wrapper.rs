@@ -14,7 +14,7 @@ extern "C" {
     fn delete_model(model: VoidPtr);
 
     fn dictionary_info(model: VoidPtr) -> VoidPtr;
-    fn model_version(model: VoidPtr) -> *const c_char;
+    fn model_version() -> *const c_char;
 
     fn transition_cost(model: VoidPtr, rattr: c_ushort, lattr: c_ushort) -> c_int;
 
@@ -64,17 +64,17 @@ impl Model {
     }
 
     /// Returns a version string.
-    pub fn version(&self) -> &[u8] {
+    pub fn version<'v>() -> &'v [u8] {
         unsafe {
-            let ver = model_version(self.void_model.as_ptr());
+            let ver = model_version();
             let s = CStr::from_ptr(ver);
             s.to_bytes()
         }
     }
 
     /// Converts [`Model::version()`] as a [`&str`].
-    pub fn version_str(&self) -> Result<&str, Utf8Error> {
-        std::str::from_utf8(self.version())
+    pub fn version_str<'v>() -> Result<&'v str, Utf8Error> {
+        std::str::from_utf8(Self::version())
     }
 
     /// Returns the transition cost from `rattr` to `lattr`.

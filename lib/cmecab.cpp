@@ -30,9 +30,8 @@ extern "C" void *dictionary_info(void *void_model) {
     return void_info;
 }
 
-extern "C" const char *model_version(void *void_model) {
-    Model *model = (Model *)void_model;
-    return model->version();
+extern "C" const char *model_version() {
+    return Model::version();
 }
 
 extern "C" int transition_cost(void *void_model, unsigned short rattr, unsigned short lattr) {
@@ -73,9 +72,8 @@ extern "C" const char *tagger_what(void *void_tagger) {
     return tagger->what();
 }
 
-extern "C" const char *tagger_version(void *void_tagger) {
-    Tagger *tagger = (Tagger *)void_tagger;
-    return tagger->version();
+extern "C" const char *tagger_version() {
+    return Tagger::version();
 }
 
 extern "C" void *new_lattice(void *void_model) {
@@ -117,6 +115,33 @@ extern "C" const char *lattice_to_string(void *void_lattice) {
     return lattice->toString();
 }
 
+extern "C" const char *lattice_to_string_alloc(void *void_lattice, char *buf, size_t size) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->toString(buf, size);
+}
+
+extern "C" const char *nbest_string(void *void_lattice, size_t n) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->enumNBestAsString(n);
+}
+
+extern "C" const char *nbest_string_alloc(void *void_lattice, size_t n, char *buf, size_t size) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->enumNBestAsString(n, buf, size);
+}
+
+extern "C" const char *node_string(void *void_lattice, const void *void_node) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    const Node* node = (const Node*)void_node;
+    return lattice->toString(node);
+}
+
+extern "C" const char *node_string_alloc(void *void_lattice, const void *void_node, char *buf, size_t size) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    const Node* node = (const Node*)void_node;
+    return lattice->toString(node, buf, size);
+}
+
 extern "C" void *bos_node(void *void_lattice) {
     Lattice *lattice = (Lattice *)void_lattice;
 
@@ -156,6 +181,53 @@ extern "C" void remove_request_type(void *void_lattice, int request_type) {
 extern "C" bool next_lattice(void *void_lattice) {
     Lattice *lattice = (Lattice *)void_lattice;
     return lattice->next();
+}
+
+extern "C" void clear_lattice(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    lattice->clear();
+}
+
+extern "C" bool is_available(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->is_available();
+}
+
+extern "C" const char *lattice_sentence(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->sentence();
+}
+
+extern "C" size_t lattice_sentence_size(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->size();
+}
+
+extern "C" double lattice_norm_factor(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->Z();
+}
+
+extern "C" void lattice_set_norm_factor(void *void_lattice, double norm) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    lattice->set_Z(norm);
+}
+
+extern "C" float lattice_theta(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->theta();
+}
+
+extern "C" void lattice_set_theta(void *void_lattice, float theta) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    lattice->set_theta(theta);
+}
+
+extern "C" void *new_node(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    const Node* node = lattice->newNode();
+    void *void_node = (void *)node;
+    return void_node;
 }
 
 extern "C" void *next_node(void *void_node) {
