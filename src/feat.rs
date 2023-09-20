@@ -90,7 +90,7 @@ impl<'a> Iterator for IntoIter<'a> {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Feature<'a> {
     inner: &'a [u8],
 }
