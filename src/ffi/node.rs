@@ -3,6 +3,7 @@ use crate::FeatureReader;
 use libc::{c_char, c_float, c_int, c_long, c_short, c_uchar, c_uint, c_ushort};
 
 use std::ffi::CStr;
+use std::fmt;
 use std::str::Utf8Error;
 
 /// Attribute ID.
@@ -99,6 +100,28 @@ pub struct Node {
     pub wcost: c_short,
     /// Best accumulative cost from the BOS node to this node.
     pub cost: c_long,
+}
+
+impl PartialEq for &Node {
+    fn eq(&self, other: &Self) -> bool {
+        std::ptr::eq(*self, *other)
+    }
+}
+impl Eq for &Node {}
+
+impl fmt::Debug for Node {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut f = f.debug_struct("Node");
+
+        let f = f.field("id", &self.id).field("status", &self.status());
+
+        let surf = self.surface();
+        let surf = String::from_utf8_lossy(surf);
+
+        let f = f.field("surface", &surf);
+
+        f.finish()
+    }
 }
 
 /// Path structure. It has the same layout as

@@ -1,6 +1,6 @@
 use super::Node;
 use super::RequestType;
-use crate::NodeIter;
+use crate::{NodeIter, NodeRevIter};
 
 use libc::{c_char, c_double, c_float, c_int, size_t};
 
@@ -198,6 +198,11 @@ impl<'a> Lattice<'a> {
     #[inline]
     pub fn iter_nodes(&self) -> NodeIter<'_> {
         NodeIter::from_bos(self)
+    }
+
+    #[inline]
+    pub fn iter_nodes_rev(&self) -> NodeRevIter<'_> {
+        NodeRevIter::from_eos(self)
     }
 
     pub fn get_request_type(&mut self) -> RequestType {

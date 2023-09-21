@@ -129,7 +129,7 @@
 //!
 //! # Useful iterators
 //!
-//! `mecab-wrapper` defines two useful iterators: [`NodeIter`] and [`Features`]
+//! `mecab-wrapper` defines two useful iterators: [`NodeIter`], [`NodeRevIter`] and [`Features`]
 //! ([`FeaturesIntoIter`]).
 //!
 //! ## Node iterator
@@ -176,6 +176,9 @@
 //! # }
 //! ```
 //!
+//! There is also an iterator [`NodeRevIter`] hat starts from the [`Eos`](Lattice::eos_node()) node
+//! and calls [`Node::prev()`] repeatedly.
+//!
 //! # Feature iterator
 //!
 //! Since the `node.features()` (`node.features_str()`) is a comma-separated string of features,
@@ -220,7 +223,7 @@ pub use ffi::*;
 #[cfg(feature = "cmecab")]
 mod node_iter;
 #[cfg(feature = "cmecab")]
-pub use node_iter::NodeIter;
+pub use node_iter::{NodeIter, NodeRevIter};
 
 mod feat;
 pub use feat::Feature;
