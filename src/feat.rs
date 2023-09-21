@@ -157,7 +157,9 @@ impl<'a> Features<'a> {
     /// assert_eq!(feats_it.next(), Some(Feature::from_inner(b"c")));
     /// assert_eq!(feats_it.next(), None);
     /// ```
-    pub fn iter(&self) -> impl Iterator<Item = Feature<'_>> {
+    pub fn iter(
+        &self,
+    ) -> impl Iterator<Item = Feature<'_>> + DoubleEndedIterator + ExactSizeIterator {
         self.record.iter().map(|inner| Feature { inner })
     }
 }
