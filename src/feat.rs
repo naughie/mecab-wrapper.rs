@@ -84,11 +84,32 @@ pub struct IntoIter<'a> {
 impl<'a> Iterator for IntoIter<'a> {
     type Item = Feature<'a>;
 
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         let inner = self.it.next()?;
         Some(Feature { inner })
     }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.it.size_hint()
+    }
+
+    #[inline]
+    fn count(self) -> usize {
+        self.it.count()
+    }
 }
+
+impl<'a> DoubleEndedIterator for IntoIter<'a> {
+    #[inline]
+    fn next_back(&mut self) -> Option<Self::Item> {
+        let inner = self.it.next_back()?;
+        Some(Feature { inner })
+    }
+}
+
+impl<'a> ExactSizeIterator for IntoIter<'a> {}
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Feature<'a> {
