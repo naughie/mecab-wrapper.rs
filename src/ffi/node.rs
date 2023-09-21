@@ -237,6 +237,8 @@ impl Node {
         std::str::from_utf8_unchecked(self.features())
     }
     /// Returns an iterator of [`Node::features()`].
+    ///
+    /// This is the same as [`FeatureReader::from_node()`].
     pub fn feature_reader(&self) -> FeatureReader<'_> {
         FeatureReader::from_node(self)
     }
