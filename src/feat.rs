@@ -76,6 +76,8 @@ impl<'a> FeatureReader<'a> {
     }
 
     /// Returns an [`IntoIterator`] of  [`Feature`].
+    ///
+    /// This requires `&mut` because [`csv::Reader::byte_headers()`] does so.
     pub fn features(&mut self) -> Result<Features<'_>, CsvError> {
         let record = self.reader.byte_headers()?;
         Ok(Features { record })
