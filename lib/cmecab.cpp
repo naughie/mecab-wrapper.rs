@@ -83,6 +83,12 @@ extern "C" void *new_lattice(void *void_model) {
     return void_lattice;
 }
 
+extern "C" void *new_lattice_standalone() {
+    Lattice *lattice = Lattice::create();
+    void *void_lattice = (void *)lattice;
+    return void_lattice;
+}
+
 extern "C" void delete_lattice(void *void_lattice) {
     Lattice *lattice = (Lattice *)void_lattice;
     delete lattice;
@@ -221,6 +227,36 @@ extern "C" float lattice_theta(void *void_lattice) {
 extern "C" void lattice_set_theta(void *void_lattice, float theta) {
     Lattice *lattice = (Lattice *)void_lattice;
     lattice->set_theta(theta);
+}
+
+extern "C" bool lattice_has_constraint(void *void_lattice) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->has_constraint();
+}
+
+extern "C" int lattice_boundary_constraint(void *void_lattice, size_t pos) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->boundary_constraint(pos);
+}
+
+extern "C" void lattice_set_boundary_constraint(void *void_lattice, size_t pos, int boundary) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    lattice->set_boundary_constraint(pos, boundary);
+}
+
+extern "C" const char *lattice_feature_constraint(void *void_lattice, size_t pos) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    return lattice->feature_constraint(pos);
+}
+
+extern "C" void lattice_set_feature_constraint(void *void_lattice, size_t begin_pos, size_t end_pos, const char *feature) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    lattice->set_feature_constraint(begin_pos, end_pos, feature);
+}
+
+extern "C" void lattice_set_result(void *void_lattice, const char *result) {
+    Lattice *lattice = (Lattice *)void_lattice;
+    lattice->set_result(result);
 }
 
 extern "C" void *new_node(void *void_lattice) {
